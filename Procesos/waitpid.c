@@ -30,7 +30,11 @@ int main()
 		pidHIJOS[i] = fork();
 
 		if(pidHIJOS[i] == 0)
+			//con este comando terminan su ejecución 
+			//NO vuelven al ciclo
 			exit(hace_algo());
+
+		//Solo el padre vuelve al ciclo
 	}
 
 	// Especificacion argumento PID
