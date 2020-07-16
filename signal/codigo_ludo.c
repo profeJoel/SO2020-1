@@ -39,7 +39,7 @@ void lanzar_dado(int s)
 	t = 1; // 1 -> significa que lanzara el dado
 }
 
-void jactarse()
+void jactarse(int s)
 {
 	printf("Proceso <%d> dice: Les gane a todos!!!\n", getpid());
 	kill(0, SIGUSR2); //les envia una senal a todos los procesos del grupo de procesos, incluso el mismo y su padre
@@ -56,8 +56,6 @@ int jugar_ludo() // main del proceso hijo
 	srand(getpid()); // semilla aleatoria
 
 	signal(SIGTERM, &volver);
-	if(t == -1)
-		return turno;
 	signal(SIGUSR2, &ignorar);
 	signal(SIGUSR1, &lanzar_dado);
 
@@ -167,12 +165,10 @@ int main()
 		{
 			ludopata[i].turnos = -1; // -1 significa vacio o nulo
 			ludopata[i].ranking = -1;
-			signal(SIGUSR2, &manejar_usr2);
 		}
 	}
 	sleep(2);
 
-	signal(SIGUSR2, &manejar_usr2);
 	//sistema de turnos
 	while(partida_en_ejecucion)
 	{
@@ -189,6 +185,7 @@ int main()
 					printf(">> Turno entregado a <%d>\n", ludopata[i].pid);
 					sleep(0.2);
 
+					signal(SIGTERM, &ignorar);
 					signal(SIGUSR2, &manejar_usr2); //-> si se ejecuta, entonces permite esperar un proceso que ha terminado
 					if(alguien_gano == 1)
 					{
@@ -234,7 +231,7 @@ int main()
 	printf("\n\n***************************************FIN DEL JUEGO******************************");
 	for(i=0; i<N; i++)
 		if(ludopata[i].ranking == 1)
-			printf("\n\nPrimer Lugar: %d -> con %d turnos... El proceso con mas suerte!!!\n\n", ludopata[i].pid, ludopata[i].turnos);
+			printf("\n\nPrimer Lugar: %d -> con %d turnos... El proceso con mas suerte!!!", ludopata[i].pid, ludopata[i].turnos);
 
 
 
