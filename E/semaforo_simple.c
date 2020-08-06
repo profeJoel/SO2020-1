@@ -35,8 +35,8 @@ void* hilo(void* arg)
 
 	//sección Crítica
 
-	contador += 1;
 	printf("Inicio de hilo: %d - %u\n", contador, (unsigned int )tid);
+	contador += 1;
 	
 	sleep(4); //toda la rutina debiera estar en esta sección
 
@@ -49,12 +49,23 @@ void* hilo(void* arg)
 
 int main()
 {
-	semaforo = 1;
-	pthread_t t1, t2;
+	semaforo = 2;
+	pthread_t t1, t2, t3, t4, t5;
+	
 	pthread_create(&t1, NULL, hilo, NULL);
 	sleep(2);
 	pthread_create(&t2, NULL, hilo, NULL);
+	sleep(2);
+	pthread_create(&t3, NULL, hilo, NULL);
+	sleep(2);
+	pthread_create(&t4, NULL, hilo, NULL);
+	sleep(2);
+	pthread_create(&t5, NULL, hilo, NULL);
+
 	pthread_join(t1, NULL);
 	pthread_join(t2, NULL);
+	pthread_join(t3, NULL);
+	pthread_join(t4, NULL);
+	pthread_join(t5, NULL);
 	return 0;
 }
